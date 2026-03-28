@@ -15,7 +15,3 @@ InvalidInputException::InvalidInputException(const QString &details)
 {
 }
 
-IndexOutOfRangeException::IndexOutOfRangeException(const QString &details)
-    : QueueException(QString("Неверный индекс: %1").arg(details))
-{
-}

@@ -12,7 +12,7 @@ public:
     void pushNumber(double value);
     void pushString(const QString &value);
     QueueItem pop();
-    QueueItem removeAt(int oneBasedIndex);
+
 
     QString toString() const;
     bool isEmpty() const;

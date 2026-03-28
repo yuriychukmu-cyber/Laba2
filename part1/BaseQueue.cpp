@@ -1,6 +1,6 @@
 #include "BaseQueue.h"
 
-#include <cstddef>
+
 #include <QStringList>
 
 #include "CustomExceptions.h"
@@ -26,21 +26,6 @@ QueueItem BaseQueue::pop()
     return first;
 }
 
-QueueItem BaseQueue::removeAt(int oneBasedIndex)
-{
-    if (m_items.empty()) {
-        throw EmptyQueueException();
-    }
-    if (oneBasedIndex < 1 || oneBasedIndex > static_cast<int>(m_items.size())) {
-        throw IndexOutOfRangeException(
-            QString("индекс должен быть от 1 до %1").arg(m_items.size()));
-    }
-
-    const size_t zeroBasedIndex = static_cast<size_t>(oneBasedIndex - 1);
-    QueueItem removed = m_items[zeroBasedIndex];
-    m_items.erase(m_items.begin() + static_cast<std::ptrdiff_t>(zeroBasedIndex));
-    return removed;
-}
 
 QString BaseQueue::toString() const
 {
@@ -51,7 +36,7 @@ QString BaseQueue::toString() const
     QStringList lines;
     for (int i = 0; i < static_cast<int>(m_items.size()); ++i) {
         const QueueItem &item = m_items[static_cast<size_t>(i)];
-        lines << QString("%1) %2").arg(i + 1).arg(item.toString());
+
     }
     return lines.join('\n');
 }

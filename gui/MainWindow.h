@@ -23,31 +23,24 @@ private:
     void setupPart2Block(class QVBoxLayout *rootLayout);
 
     void addPart1Item();
-    void removePart1ItemByIndex();
+
     void showPart1Queue();
     void sortPart1Numbers();
 
     void addPart2Item();
-    void removePart2ItemByIndex();
-    void showPart2Queue();
-
-    void setPart1Status(const QString &message, bool isError);
-    void showPart1CurrentState();
-    void showPart2CurrentState();
-    int readOneBasedIndex(QLineEdit *indexEdit) const;
 
     SortableNumberQueue m_part1Queue;
     TemplateQueue<int> m_intQueue;
     TemplateQueue<QString> m_stringQueue;
 
     QLineEdit *m_part1Input = nullptr;
-    QLineEdit *m_part1RemoveIndex = nullptr;
+
     QComboBox *m_part1Type = nullptr;
     QTextEdit *m_part1Output = nullptr;
     QLabel *m_part1Status = nullptr;
 
     QLineEdit *m_part2Input = nullptr;
-    QLineEdit *m_part2RemoveIndex = nullptr;
+
     QComboBox *m_part2Type = nullptr;
     QTextEdit *m_part2Output = nullptr;
     QLabel *m_part2Status = nullptr;

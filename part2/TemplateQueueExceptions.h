@@ -10,12 +10,3 @@ public:
     {
     }
 };
-
-class TemplateQueueIndexOutOfRangeException : public std::runtime_error
-{
-public:
-    explicit TemplateQueueIndexOutOfRangeException(const std::string &message)
-        : std::runtime_error(message)
-    {
-    }
-};

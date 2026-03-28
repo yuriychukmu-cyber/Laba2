@@ -20,9 +20,3 @@ class InvalidInputException : public QueueException
 public:
     explicit InvalidInputException(const QString &details);
 };
-
-class IndexOutOfRangeException : public QueueException
-{
-public:
-    explicit IndexOutOfRangeException(const QString &details);
-};

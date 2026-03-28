@@ -3,14 +3,14 @@
 #include <QComboBox>
 #include <QFrame>
 #include <QHBoxLayout>
-#include <QIntValidator>
+
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <stdexcept>
+
 
 #include "../part1/CustomExceptions.h"
 #include "../part2/TemplateQueueExceptions.h"
@@ -49,11 +49,7 @@ void MainWindow::setupPart1Block(QVBoxLayout *rootLayout)
     m_part1Type->addItems({"Число", "Строка"});
 
     auto *addButton = new QPushButton("Добавить", this);
-    m_part1RemoveIndex = new QLineEdit(this);
-    m_part1RemoveIndex->setPlaceholderText("Индекс (с 1)");
-    m_part1RemoveIndex->setValidator(new QIntValidator(1, 1000000, m_part1RemoveIndex));
 
-    auto *popButton = new QPushButton("Удалить по индексу", this);
     auto *showButton = new QPushButton("Показать очередь", this);
     auto *sortButton = new QPushButton("Сортировать числа", this);
 
@@ -62,8 +58,7 @@ void MainWindow::setupPart1Block(QVBoxLayout *rootLayout)
     controlsLayout->addWidget(new QLabel("Тип:", this));
     controlsLayout->addWidget(m_part1Type);
     controlsLayout->addWidget(addButton);
-    controlsLayout->addWidget(new QLabel("Удалить индекс:", this));
-    controlsLayout->addWidget(m_part1RemoveIndex);
+
     controlsLayout->addWidget(popButton);
     controlsLayout->addWidget(showButton);
     controlsLayout->addWidget(sortButton);
@@ -82,11 +77,7 @@ void MainWindow::setupPart1Block(QVBoxLayout *rootLayout)
     rootLayout->addWidget(separator);
 
     connect(addButton, &QPushButton::clicked, this, &MainWindow::addPart1Item);
-    connect(popButton, &QPushButton::clicked, this, &MainWindow::removePart1ItemByIndex);
-    connect(showButton, &QPushButton::clicked, this, &MainWindow::showPart1Queue);
-    connect(sortButton, &QPushButton::clicked, this, &MainWindow::sortPart1Numbers);
 
-    m_part1Output->clear();
 }
 
 void MainWindow::setupPart2Block(QVBoxLayout *rootLayout)
@@ -103,11 +94,7 @@ void MainWindow::setupPart2Block(QVBoxLayout *rootLayout)
     m_part2Type->addItems({"int", "QString"});
 
     auto *addButton = new QPushButton("Добавить", this);
-    m_part2RemoveIndex = new QLineEdit(this);
-    m_part2RemoveIndex->setPlaceholderText("Индекс (с 1)");
-    m_part2RemoveIndex->setValidator(new QIntValidator(1, 1000000, m_part2RemoveIndex));
 
-    auto *popButton = new QPushButton("Удалить по индексу", this);
     auto *showButton = new QPushButton("Показать очередь", this);
 
     controlsLayout->addWidget(new QLabel("Значение:", this));
@@ -115,8 +102,7 @@ void MainWindow::setupPart2Block(QVBoxLayout *rootLayout)
     controlsLayout->addWidget(new QLabel("Тип очереди:", this));
     controlsLayout->addWidget(m_part2Type);
     controlsLayout->addWidget(addButton);
-    controlsLayout->addWidget(new QLabel("Удалить индекс:", this));
-    controlsLayout->addWidget(m_part2RemoveIndex);
+
     controlsLayout->addWidget(popButton);
     controlsLayout->addWidget(showButton);
 
@@ -129,9 +115,7 @@ void MainWindow::setupPart2Block(QVBoxLayout *rootLayout)
     rootLayout->addWidget(m_part2Status);
 
     connect(addButton, &QPushButton::clicked, this, &MainWindow::addPart2Item);
-    connect(popButton, &QPushButton::clicked, this, &MainWindow::removePart2ItemByIndex);
-    connect(showButton, &QPushButton::clicked, this, &MainWindow::showPart2Queue);
-    m_part2Output->clear();
+
 }
 
 void MainWindow::addPart1Item()
@@ -156,19 +140,13 @@ void MainWindow::addPart1Item()
         }
 
         m_part1Input->clear();
+
     } catch (const QueueException &ex) {
         setPart1Status(ex.what(), true);
     }
 }
 
-void MainWindow::removePart1ItemByIndex()
-{
-    try {
-        const int oneBasedIndex = readOneBasedIndex(m_part1RemoveIndex);
-        const QueueItem removed = m_part1Queue.removeAt(oneBasedIndex);
-        setPart1Status(
-            QString("Удалён элемент с индексом %1: %2").arg(oneBasedIndex).arg(removed.toString()),
-            false);
+
     } catch (const QueueException &ex) {
         setPart1Status(ex.what(), true);
     }
@@ -176,13 +154,14 @@ void MainWindow::removePart1ItemByIndex()
 
 void MainWindow::showPart1Queue()
 {
-    showPart1CurrentState();
+
     setPart1Status("Содержимое очереди обновлено", false);
 }
 
 void MainWindow::sortPart1Numbers()
 {
     m_part1Queue.sortNumbersOnly();
+
     setPart1Status("Числовые элементы отсортированы по возрастанию", false);
 }
 
@@ -209,27 +188,14 @@ void MainWindow::addPart2Item()
 
         m_part2Status->setStyleSheet("color: #1b5e20;");
         m_part2Input->clear();
+
     } catch (const InvalidInputException &ex) {
         m_part2Status->setText(ex.what());
         m_part2Status->setStyleSheet("color: #b71c1c;");
     }
 }
 
-void MainWindow::removePart2ItemByIndex()
-{
-    try {
-        const int oneBasedIndex = readOneBasedIndex(m_part2RemoveIndex);
-        if (m_part2Type->currentText() == "int") {
-            const int removed = m_intQueue.removeAt(oneBasedIndex);
-            m_part2Status->setText(
-                QString("Удалён из TemplateQueue<int> индекс %1: %2").arg(oneBasedIndex).arg(removed));
-        } else {
-            const QString removed = m_stringQueue.removeAt(oneBasedIndex);
-            m_part2Status->setText(
-                QString("Удалён из TemplateQueue<QString> индекс %1: %2").arg(oneBasedIndex).arg(removed));
-        }
-        m_part2Status->setStyleSheet("color: #1b5e20;");
-    } catch (const std::runtime_error &ex) {
+
         m_part2Status->setText(ex.what());
         m_part2Status->setStyleSheet("color: #b71c1c;");
     }
@@ -237,7 +203,7 @@ void MainWindow::removePart2ItemByIndex()
 
 void MainWindow::showPart2Queue()
 {
-    showPart2CurrentState();
+
     m_part2Status->setText("Содержимое шаблонной очереди обновлено");
     m_part2Status->setStyleSheet("color: #1b5e20;");
 }
@@ -248,12 +214,12 @@ void MainWindow::setPart1Status(const QString &message, bool isError)
     m_part1Status->setStyleSheet(isError ? "color: #b71c1c;" : "color: #1b5e20;");
 }
 
-void MainWindow::showPart1CurrentState()
+
 {
     m_part1Output->setPlainText(m_part1Queue.toString());
 }
 
-void MainWindow::showPart2CurrentState()
+
 {
     if (m_part2Type->currentText() == "int") {
         m_part2Output->setPlainText(m_intQueue.toString());
@@ -262,17 +228,3 @@ void MainWindow::showPart2CurrentState()
     }
 }
 
-int MainWindow::readOneBasedIndex(QLineEdit *indexEdit) const
-{
-    const QString rawText = indexEdit->text().trimmed();
-    if (rawText.isEmpty()) {
-        throw InvalidInputException("укажите индекс для удаления");
-    }
-
-    bool ok = false;
-    const int index = rawText.toInt(&ok);
-    if (!ok || index < 1) {
-        throw InvalidInputException("индекс должен быть целым числом от 1");
-    }
-    return index;
-}

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstddef>
 #include <deque>
 #include <sstream>
 #include <type_traits>
@@ -27,23 +26,6 @@ public:
         T first = m_items.front();
         m_items.pop_front();
         return first;
-    }
-
-    T removeAt(int oneBasedIndex)
-    {
-        if (m_items.empty()) {
-            throw TemplateQueueEmptyException();
-        }
-        if (oneBasedIndex < 1 || oneBasedIndex > static_cast<int>(m_items.size())) {
-            std::ostringstream message;
-            message << "Индекс должен быть от 1 до " << m_items.size();
-            throw TemplateQueueIndexOutOfRangeException(message.str());
-        }
-
-        const size_t zeroBasedIndex = static_cast<size_t>(oneBasedIndex - 1);
-        T removed = m_items[zeroBasedIndex];
-        m_items.erase(m_items.begin() + static_cast<std::ptrdiff_t>(zeroBasedIndex));
-        return removed;
     }
 
     const T &front() const
