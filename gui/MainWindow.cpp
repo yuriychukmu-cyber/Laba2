@@ -149,13 +149,14 @@ void MainWindow::addPart1Item()
                 throw InvalidInputException("невозможно преобразовать значение в число");
             }
             m_part1Queue.pushNumber(value);
-            setPart1Status("Число добавлено. Текущее отображение не изменено, нажмите «Показать очередь».", false);
+            setPart1Status("Число добавлено в очередь", false);
         } else {
             m_part1Queue.pushString(rawText);
-            setPart1Status("Строка добавлена. Текущее отображение не изменено, нажмите «Показать очередь».", false);
+            setPart1Status("Строка добавлена в очередь", false);
         }
 
         m_part1Input->clear();
+        m_part1Output->clear();
     } catch (const QueueException &ex) {
         setPart1Status(ex.what(), true);
     }
@@ -167,10 +168,9 @@ void MainWindow::removePart1ItemByIndex()
         const int oneBasedIndex = readOneBasedIndex(m_part1RemoveIndex);
         const QueueItem removed = m_part1Queue.removeAt(oneBasedIndex);
         setPart1Status(
-            QString("Удалён элемент с индексом %1: %2. Отображение не обновлено, нажмите «Показать очередь».")
-                .arg(oneBasedIndex)
-                .arg(removed.toString()),
+            QString("Удалён элемент с индексом %1: %2").arg(oneBasedIndex).arg(removed.toString()),
             false);
+        m_part1Output->clear();
     } catch (const QueueException &ex) {
         setPart1Status(ex.what(), true);
     }
@@ -185,7 +185,8 @@ void MainWindow::showPart1Queue()
 void MainWindow::sortPart1Numbers()
 {
     m_part1Queue.sortNumbersOnly();
-    setPart1Status("Числа отсортированы. Отображение не обновлено, нажмите «Показать очередь».", false);
+    m_part1Output->clear();
+    setPart1Status("Числовые элементы отсортированы по возрастанию", false);
 }
 
 void MainWindow::addPart2Item()
@@ -203,14 +204,15 @@ void MainWindow::addPart2Item()
                 throw InvalidInputException("для очереди int нужно целое число");
             }
             m_intQueue.push(value);
-            m_part2Status->setText("Элемент добавлен в TemplateQueue<int>. Отображение не обновлено, нажмите «Показать очередь».");
+            m_part2Status->setText("Элемент добавлен в TemplateQueue<int>");
         } else {
             m_stringQueue.push(rawText);
-            m_part2Status->setText("Элемент добавлен в TemplateQueue<QString>. Отображение не обновлено, нажмите «Показать очередь».");
+            m_part2Status->setText("Элемент добавлен в TemplateQueue<QString>");
         }
 
         m_part2Status->setStyleSheet("color: #1b5e20;");
         m_part2Input->clear();
+        m_part2Output->clear();
     } catch (const InvalidInputException &ex) {
         m_part2Status->setText(ex.what());
         m_part2Status->setStyleSheet("color: #b71c1c;");
@@ -224,17 +226,14 @@ void MainWindow::removePart2ItemByIndex()
         if (m_part2Type->currentText() == "int") {
             const int removed = m_intQueue.removeAt(oneBasedIndex);
             m_part2Status->setText(
-                QString("Удалён из TemplateQueue<int> индекс %1: %2. Отображение не обновлено, нажмите «Показать очередь».")
-                    .arg(oneBasedIndex)
-                    .arg(removed));
+                QString("Удалён из TemplateQueue<int> индекс %1: %2").arg(oneBasedIndex).arg(removed));
         } else {
             const QString removed = m_stringQueue.removeAt(oneBasedIndex);
             m_part2Status->setText(
-                QString("Удалён из TemplateQueue<QString> индекс %1: %2. Отображение не обновлено, нажмите «Показать очередь».")
-                    .arg(oneBasedIndex)
-                    .arg(removed));
+                QString("Удалён из TemplateQueue<QString> индекс %1: %2").arg(oneBasedIndex).arg(removed));
         }
         m_part2Status->setStyleSheet("color: #1b5e20;");
+        m_part2Output->clear();
     } catch (const std::runtime_error &ex) {
         m_part2Status->setText(ex.what());
         m_part2Status->setStyleSheet("color: #b71c1c;");
