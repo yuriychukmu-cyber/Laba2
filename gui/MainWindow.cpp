@@ -156,7 +156,6 @@ void MainWindow::addPart1Item()
         }
 
         m_part1Input->clear();
-        m_part1Output->clear();
     } catch (const QueueException &ex) {
         setPart1Status(ex.what(), true);
     }
@@ -170,7 +169,6 @@ void MainWindow::removePart1ItemByIndex()
         setPart1Status(
             QString("Удалён элемент с индексом %1: %2").arg(oneBasedIndex).arg(removed.toString()),
             false);
-        m_part1Output->clear();
     } catch (const QueueException &ex) {
         setPart1Status(ex.what(), true);
     }
@@ -185,7 +183,6 @@ void MainWindow::showPart1Queue()
 void MainWindow::sortPart1Numbers()
 {
     m_part1Queue.sortNumbersOnly();
-    m_part1Output->clear();
     setPart1Status("Числовые элементы отсортированы по возрастанию", false);
 }
 
@@ -212,7 +209,6 @@ void MainWindow::addPart2Item()
 
         m_part2Status->setStyleSheet("color: #1b5e20;");
         m_part2Input->clear();
-        m_part2Output->clear();
     } catch (const InvalidInputException &ex) {
         m_part2Status->setText(ex.what());
         m_part2Status->setStyleSheet("color: #b71c1c;");
@@ -233,7 +229,6 @@ void MainWindow::removePart2ItemByIndex()
                 QString("Удалён из TemplateQueue<QString> индекс %1: %2").arg(oneBasedIndex).arg(removed));
         }
         m_part2Status->setStyleSheet("color: #1b5e20;");
-        m_part2Output->clear();
     } catch (const std::runtime_error &ex) {
         m_part2Status->setText(ex.what());
         m_part2Status->setStyleSheet("color: #b71c1c;");
